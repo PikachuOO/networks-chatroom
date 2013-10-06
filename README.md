@@ -91,8 +91,9 @@ wikipedia donation
 network seemsez
 
 a) Commands that server should support: 
-| command | functionality | 
-| --- | --- | 
-| `whoelse`      | displays name of other connected users                                                   					  | 
-| `wholasthr`    | displays name of users that connected within the last hour                        							  | 
-| `broadcast`    | broadcast message following this command to all connected user               								  | 
+
+| command     | functionality                                                  |
+| ---         | ---                                                            |
+| `whoelse`   | displays name of other connected users                         |
+| `wholasthr` | displays name of users that connected within the last hour     |
+| broadcast`  | broadcast message following this command to all connected user |
