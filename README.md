@@ -4,7 +4,6 @@ Nathan Hayes-Roth
 CSEE 4119 - Computer Networks
 Programming Assignment 1 - A simple client-server program
 
------------------------------------
 
 ### Development Information
 
@@ -13,25 +12,26 @@ Programming Assignment 1 - A simple client-server program
 - Operating System:		Windows 7 	
 - Software: 			Sublime Text 2 & cmd.exe
 
------------------------------------
 
 ### Instructions to Compile and Run
 
 1. TODO: complete
 
------------------------------------
 
 ### Program Description
 
 TODO: complete
 
------------------------------------
 
 ### Files
 
-1. TODO: complete
+TODO: complete
 
------------------------------------
+
+### Extensions
+
+TODO: complete
+
 
 ### Assignment Instructions
 
@@ -69,7 +69,8 @@ at terminal 1:
 `java server 4119`				// 4119 here is just an example. We may test on other unoccupied ports 
 
 at terminal 2: 
-`java client 10.11.12.13 4119`	// 4119 is the port that server listens on, and 10.11.12.13 is the IP address of the server program 
+`java client 10.11.12.13 4119`	// 4119 is the port that server listens on, and 10.11.12.13
+								// is the IP address of the server program 
 `Username: network`				// after connecting to server, your program should prompt "Username: " and 
 								// wait for user to put in his/her name. Here our user is "network" 
 `Password: seemsez`				// again your program should prompt "Password: " and wait for user to put in 

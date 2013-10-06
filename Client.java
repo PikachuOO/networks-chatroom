@@ -63,7 +63,7 @@ public class Client {
 		Client client = null;
 		if (args.length != 2){
 			System.out.println("\nUsage: java Client port_number");
-			System.out.println("e.g.   java Client localhost 10\n");
+			System.out.println("e.g.   java Client localhost 4119\n");
 		}
 		else
 			client = new Client(args[0], Integer.parseInt(args[1]));

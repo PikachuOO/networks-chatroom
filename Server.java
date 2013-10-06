@@ -5,6 +5,7 @@
 
 import java.net.*;
 import java.io.*;
+import java.util.Hashtable;
 
 
 public class Server {
@@ -56,12 +57,35 @@ public class Server {
 			streamIn.close();
 	}
 
+	// load credentials from text file into Hashtable
+	public static Hashtable<String, String> loadCredentials(){
+		Hashtable<String, String> to_return = new Hashtable<String, String>();
+		try {
+			// open a buffered reader
+			BufferedReader reader = new BufferedReader(new FileReader("./credentials.txt"));
+			String line = null;
+			// split each line and add the name/password pair to the hashtable
+			while ((line = reader.readLine()) != null) {
+				String[] split = line.split("\\s");
+				to_return.put(split[0], split[1]);
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Error loading credentials: " + e.getMessage());
+		}
+		return to_return;
+
+	}
+
 	// main
 	public static void main(String args[]) {
-		Server server = null;
+		Server server = null;							// server
+		Hashtable credentials = loadCredentials();		// read credentials into Hashtable
+		System.out.println("DEBUG: " + credentials.size());
+
 		if (args.length != 1){
 			System.out.println("\nUsage: java Server port_number");
-			System.out.println("e.g.   java Server 10\n");
+			System.out.println("e.g.   java Server 4119\n");
 		}
 		else
 			server = new Server(Integer.parseInt(args[0]));
