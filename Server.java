@@ -1,6 +1,13 @@
 /*
- *
- *
+ * File: Server.java
+ * ------------
+ * Name : Nathan Hayes-Roth
+ * UNI : nbh2113
+ * Class: Computer Networks
+ * Assignment: Programming Assignment #1
+ * ------------
+ * Description:
+ * 
  */
 
 import java.net.*;

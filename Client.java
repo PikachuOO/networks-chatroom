@@ -1,18 +1,27 @@
 /*
- *
- *
+ * File: Client.java
+ * ------------
+ * Name : Nathan Hayes-Roth
+ * UNI : nbh2113
+ * Class: Computer Networks
+ * Assignment: Programming Assignment #1
+ * ------------
+ * Description:
+ * 
  */
 
 import java.net.*;
 import java.io.*;
 
-public class Client {
-	//private variables
-	private Socket client_socket              = null;
-	private DataInputStream  console   = null;
-	private DataOutputStream streamOut = null;
+public class Client implements Runnable {
+	
+	/* class variables */
+	private Socket 			 client_socket = null;
+	private DataInputStream  input_stream  = null;
+	private DataOutputStream output_stream = null;
+	private boolean			 closed		   = false;
 
-	// client constructor
+	/* Client Constructor */
 	public Client(String server_address, int port_number) {
 		System.out.println("Establishing connection. Please wait...");
 		// open a socket for communication with the server
@@ -33,8 +42,8 @@ public class Client {
 			String line = "";
 			// split each line and add the name/password pair to the hashtable
 			while ((line = reader.readLine()) != null && !line.equals("logout")) {
-				streamOut.writeUTF(line);
-				streamOut.flush();
+				output_stream.writeUTF(line);
+				output_stream.flush();
 			}
 		}
 		catch (IOException e) {
@@ -44,15 +53,15 @@ public class Client {
 
 	// setup a new ouput stream
 	public void start() throws IOException{
-		console   = new DataInputStream(System.in);
-		streamOut = new DataOutputStream(client_socket.getOutputStream());
+		input_stream   = new DataInputStream(System.in);
+		output_stream = new DataOutputStream(client_socket.getOutputStream());
 	}
 
 	// 
 	public void stop() {
 		try {
-			if (console   != null)  console.close();
-			if (streamOut != null)  streamOut.close();
+			if (input_stream   != null)  input_stream.close();
+			if (output_stream != null)  output_stream.close();
 			if (client_socket    != null)  client_socket.close();
 		}
 		catch(IOException ioe){
@@ -60,14 +69,48 @@ public class Client {
 		}
 	}
 
-	// main
-	public static void main(String args[]) {
-		Client client = null;
-		if (args.length != 2){
-			System.out.println("\nUsage: java Client port_number");
-			System.out.println("e.g.   java Client localhost 4119\n");
+	/*
+	 * Create a thread to read data from the server.
+	 */
+	public void run(){
+		try {
+			// open a buffered reader
+			BufferedReader reader = new BufferedReader(new InputStreamReader(input_stream));
+			String line = "";
+			// split each line and add the name/password pair to the hashtable
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+				if (!line.equals("logout")){
+					break;
+				}
+			}
+			closed = true;
 		}
-		else
-			client = new Client(args[0], Integer.parseInt(args[1]));
+		catch (IOException e) {
+			System.out.println("Error reading client input : " + e.getMessage());
+		}
+	}
+
+	private static void instruct(){
+		System.out.println("\nUsage: java Client <server_address> <port_number>");
+		System.out.println("e.g.   java Client localhost 4119\n");
+	}
+
+	public static void main(String args[]) {
+		// check cmd line arguments for correct length
+		if (args.length != 2){
+			instruct();
+		}
+		// create a client
+		else {
+			try{
+				Client client = new Client(args[0], Integer.parseInt(args[1]));
+			}
+			// catch formatting exceptions and instruct the user
+			catch (Exception e) {
+				System.out.println("Command line error: " + e.getMessage());
+				instruct();
+			}
+		}
 	}
 }
