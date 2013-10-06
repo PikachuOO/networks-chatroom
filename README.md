@@ -6,7 +6,7 @@ Programming Assignment 1 - A simple client-server program
 
 -----------------------------------
 
-## Development Information
+### Development Information
 
 - Programming Language: Java 
 - Language Version: 	1.6.0_27
@@ -15,25 +15,25 @@ Programming Assignment 1 - A simple client-server program
 
 -----------------------------------
 
-## Instructions to Compile and Run
+### Instructions to Compile and Run
 
 1. TODO: complete
 
 -----------------------------------
 
-## Program Description
+### Program Description
 
 TODO: complete
 
 -----------------------------------
 
-## Files
+### Files
 
 1. TODO: complete
 
 -----------------------------------
 
-## Assignment Instructions
+### Assignment Instructions
 
 Programming Assignment 1 
 
@@ -96,4 +96,4 @@ a) Commands that server should support:
 | ---         | ---                                                            |
 | `whoelse`   | displays name of other connected users                         |
 | `wholasthr` | displays name of users that connected within the last hour     |
-| broadcast`  | broadcast message following this command to all connected user |
+| `broadcast` | broadcast message following this command to all connected user |
