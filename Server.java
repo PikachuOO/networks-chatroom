@@ -10,21 +10,21 @@ import java.util.Hashtable;
 
 public class Server {
 	// private variables
-	private Socket          socket   = null;
-	private ServerSocket    server   = null;
+	private Socket          client_socket   = null;
+	private ServerSocket    server_socket   = null;
 	private DataInputStream streamIn =  null;
 
-	// server constructor method
+	// server constructor
 	public Server(int port_number) {  
 		try {
 			// create a soocket that listens to connection requests
 			System.out.println("Binding to port " + port_number + ", please wait  ...");
-			server = new ServerSocket(port_number);
-			System.out.println("Server started: " + server);
+			server_socket = new ServerSocket(port_number);
+			System.out.println("Server started: " + server_socket);
 			System.out.println("Waiting for a client..."); 
 			// listen for a connection to be made and accept it
-			socket = server.accept();
-			System.out.println("Client accepted: " + socket);
+			client_socket = server_socket.accept();
+			System.out.println("Client accepted: " + client_socket);
 			open();
 			boolean done = false;
 			while (!done){
@@ -46,13 +46,13 @@ public class Server {
 
 	// open a connection
 	public void open() throws IOException {
-		streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+		streamIn = new DataInputStream(new BufferedInputStream(client_socket.getInputStream()));
 	}
 
 	// close a connection
 	public void close() throws IOException {
-		if (socket != null)
-			socket.close();
+		if (client_socket != null)
+			client_socket.close();
 		if (streamIn != null)
 			streamIn.close();
 	}
@@ -74,7 +74,6 @@ public class Server {
 			System.out.println("Error loading credentials: " + e.getMessage());
 		}
 		return to_return;
-
 	}
 
 	// main

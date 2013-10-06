@@ -8,42 +8,44 @@ import java.io.*;
 
 public class Client {
 	//private variables
-	private Socket socket              = null;
+	private Socket client_socket              = null;
 	private DataInputStream  console   = null;
 	private DataOutputStream streamOut = null;
 
 	// client constructor
 	public Client(String server_address, int port_number) {
 		System.out.println("Establishing connection. Please wait...");
-		// create a socket for communication with the server
+		// open a socket for communication with the server
 		try {
-			socket = new Socket(server_address, port_number);
-			System.out.println("Connected: " + socket);
+			// port_number is the port number the server is listening on
+			client_socket = new Socket(server_address, port_number);
+			System.out.println("Connected: " + client_socket);
 			start();
 		}
-		catch(UnknownHostException e) {
-			System.out.println("Unknown host exception: " + e.getMessage());
+		// catch exceptions
+		catch(Exception e) {
+			System.out.println("Error opening client socket: " + e.getMessage());
 		}
-		catch(IOException e) {
-			System.out.println("IO exception: " + e.getMessage());
-		}
-		String line = "";
-		while (!line.equals("logout")) {
-			try {
-				line = console.readLine();
+		// read client input and send it to outpur stream
+		try {
+			// open a buffered reader
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			String line = "";
+			// split each line and add the name/password pair to the hashtable
+			while ((line = reader.readLine()) != null && !line.equals("logout")) {
 				streamOut.writeUTF(line);
 				streamOut.flush();
 			}
-			catch(IOException e) {
-				System.out.println("IO exception: " + e.getMessage());
-			}
+		}
+		catch (IOException e) {
+			System.out.println("Error reading client input : " + e.getMessage());
 		}
 	}
 
 	// setup a new ouput stream
 	public void start() throws IOException{
 		console   = new DataInputStream(System.in);
-		streamOut = new DataOutputStream(socket.getOutputStream());
+		streamOut = new DataOutputStream(client_socket.getOutputStream());
 	}
 
 	// 
@@ -51,7 +53,7 @@ public class Client {
 		try {
 			if (console   != null)  console.close();
 			if (streamOut != null)  streamOut.close();
-			if (socket    != null)  socket.close();
+			if (client_socket    != null)  client_socket.close();
 		}
 		catch(IOException ioe){
 			System.out.println("Error closing ...");
