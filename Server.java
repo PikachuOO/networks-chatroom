@@ -18,11 +18,12 @@ import java.util.Hashtable;
 public class Server {
 
     /* Class Variables */
-    private static ServerSocket                     server_socket = null;
-    private static Socket                           client_socket = null;
-    public static Hashtable<ClientThread, String>       synchronized_threads = new Hashtable<ClientThread, String>();             // Synchronized storage prevents errors such as null pointers
-    private static Hashtable<String, String>          credentials = new Hashtable<String,String>();
-    public static Hashtable<InetAddress, Long> blocked_addresses = new Hashtable<InetAddress, Long>();     // Synchronized storage prevents errors such as null pointers
+    private static ServerSocket                    server_socket = null;
+    private static Socket                          client_socket = null;
+    private static Hashtable<String, String>         credentials = new Hashtable<String,String>();
+    public static Hashtable<ClientThread, String> active_threads = new Hashtable<ClientThread, String>();
+    public static Hashtable<String, Long>            login_times = new Hashtable<String, Long>();
+    public static Hashtable<InetAddress, Long> blocked_addresses = new Hashtable<InetAddress, Long>();
     
     /*
      * Check command line arguments for correct length. If necessary,
@@ -33,7 +34,7 @@ public class Server {
         // check command line arguments for correct length and select port
         if (args.length != 1){
             System.out.println("\nUsage: java Server <port_number>");
-            System.out.println("Defaulted to: java Server 4119\n");
+            System.out.println("Defaulted to: java Server 4119");
         } else {
             port_number = Integer.parseInt(args[0]);
         }
@@ -82,43 +83,15 @@ public class Server {
                     os.close();
                     client_socket.close();
                 } else {
-                    // add the thread to the table
+                    // start a new client thread and start running it
                     ClientThread thread = new ClientThread(client_socket);
-                    synchronized_threads.put(thread, "unknown");
                     thread.start();
                     
                 }
             } catch (Exception e) {
                 System.err.println("Error creating a ClientThread: " + e.getMessage());
             }
-                
-                /*
-                
-                
-                int i = 0;
-                for (i = 0; i < maxClientsCount; i++) {
-                    if (threads[i] == null) {
-                        (threads[i] = new ClientThread(client_socket, threads))
-                                .start();
-                        break;
-                    }
-                }
-                if (i == maxClientsCount) {
-                    PrintStream os = new PrintStream(
-                            client_socket.getOutputStream());
-                    os.println("Server too busy. Try later.");
-                    os.close();
-                    client_socket.close();
-                }
-                
-                
-            } catch (IOException e) {
-                System.out.println(e);
-            }
-            
-                */
         }
-        
     }
     
     /*

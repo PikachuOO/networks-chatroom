@@ -1,4 +1,4 @@
-# Computer Networks - Chatroom
+# Computer Networks - Client/Server Application
 
 Nathan Hayes-Roth
 CSEE 4119 - Computer Networks
@@ -25,7 +25,10 @@ TODO: complete
 
 ### Files
 
-TODO: complete
+./Makefile
+./Server.java
+./ClientThread.java
+./Client.java
 
 
 ### Extensions

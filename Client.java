@@ -33,7 +33,7 @@ public class Client implements Runnable {
         // check command line arguments for correct length and select address/port
         if (args.length != 2){
             System.out.println("\nUsage: java Client <server_address> <port_number>");
-            System.out.println("Defaulted to: java Client localhost 4119\n");
+            System.out.println("Defaulted to: java Client localhost 4119");
         } else {
             server_address = args[0];
             port_number = Integer.parseInt(args[1]);
