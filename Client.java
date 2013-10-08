@@ -1,13 +1,13 @@
 /*
  * File: Client.java
  * ------------
- * Name:    Nathan Hayes-Roth
- * UNI:    nbh2113
- * Class:    Computer Networks
+ * Name:       Nathan Hayes-Roth
+ * UNI:        nbh2113
+ * Class:      Computer Networks
  * Assignment: Programming Assignment #1
  * ------------
- * Description: The client application allows users to log onto the server using the
- * client terminal. The client application opens a TCP connection to the server and 
+ * Description: The Client application allows users to connect to the server using the
+ * Client terminal. The Client application opens a TCP connection to the server and 
  * then runs two threads simultaneously, allowing the user to write to as well as 
  * read from the server.
  */
@@ -23,6 +23,12 @@ public class Client implements Runnable {
     private static PrintStream    output_stream = null;  // output to server
     private static boolean               closed = false; // boolean signal if client has logged out
     private static BufferedReader  client_input = null;  // input from client
+    
+    /* main */
+    public static void main(String[] args) {
+        setupConnection(args, "localhost", 4119);
+        manageConnection();
+    }
 
     /*
      * Check command line arguments for correct length. If necessary,
@@ -49,7 +55,6 @@ public class Client implements Runnable {
             System.err.println("Error opening client socket: " + e.getMessage());
             System.exit(1);
         }
-        
     }
     
     /*
@@ -87,19 +92,11 @@ public class Client implements Runnable {
         try {
             while ((server_message = input_stream.readLine()) != null) {
                 System.out.println(server_message);
-                if (server_message.indexOf("*** Bye") != -1)
-                    break;
             }
             closed = true;
         } catch (Exception e) {
             System.err.println("Error reading from server:  " + e.getMessage());
             System.exit(1);
         }
-    }
-
-    /* main */
-    public static void main(String[] args) {
-        setupConnection(args, "localhost", 4119);
-        manageConnection();
     }
 }

@@ -1,36 +1,46 @@
 /*
  * File: ClientThread.java
  * ------------
- * Name:    Nathan Hayes-Roth
- * UNI:    nbh2113
- * Class:    Computer Networks
+ * Name:       Nathan Hayes-Roth
+ * UNI:        nbh2113
+ * Class:      Computer Networks
  * Assignment: Programming Assignment #1
  * ------------
- * Description: threads
- * 
+ * Description: once a Client has connected to the Server, the Server spawns a ClientThread to handle
+ * all future communications. Each ClientThread has its own Socket and input/output streams and handles
+ *     - user login
+ *     - welcome/goodbye messages
+ *     - all communication with the server/other clients
  */
 
 import java.io.*;
 import java.net.*;
 
-/*
- * The chat client thread. This client thread opens the input and the output
- * streams for a particular client, ask the client's name, informs all the
- * clients connected to the server about the fact that a new client has joined
- * the chat room, and as long as it receive data, echos that data back to all
- * other clients. The thread broadcast the incoming messages to all clients and
- * routes the private message to the particular client. When a client leaves the
- * chat room this thread informs also all the clients about that and terminates.
- */
 class ClientThread extends Thread {
 
+    /* class variables */
     private BufferedReader input_stream = null;
-    private PrintStream output_stream = null;
-    private Socket client_socket = null;
-    private String username = "";
+    private PrintStream   output_stream = null;
+    private Socket        client_socket = null;
+    private String             username = "";
 
+    /* class constuctor */
     public ClientThread(Socket clientSocket) {
         this.client_socket = clientSocket;
+    }
+    
+    /* 
+     * Run method, called when the server calls start() on newly created ClientThreads
+     */
+    public void run() {
+        openStreams();
+        username = getUsername();
+        // give the client 3 chances to enter the correct password
+        if (login(username, 0,3)){
+            welcome();
+            listen();
+        }
+        cleanup();
     }
     
     /*
@@ -46,7 +56,7 @@ class ClientThread extends Thread {
     }
     
     /*
-     * Continue prompting the user for name until they provide one that contained in the accepted list.
+     * Continue prompting the user for name until they provide one that is contained in the accepted list.
      */
     private String getUsername(){
         while (true) {
@@ -100,7 +110,9 @@ class ClientThread extends Thread {
         } else return login(name, failed+1, allowed);
     }
     
-    /* Welcome the new the client. */
+    /* 
+     * Welcome the new the client. 
+     */
     private void welcome(){
         // inform other users
         for (ClientThread thread : Server.active_threads.keySet()){
@@ -113,30 +125,6 @@ class ClientThread extends Thread {
                 ". ***\n\tTo leave, type:     \"/exit\"" +
                 "\n\tFor commands, type: \"/help\"\n");
     }
-    
-    /*
-     * Remove the thread from the Hashtable of currently running threads, inform others of this user's departure, 
-     * and close this thread and its streams.
-     */
-    private void cleanup(){
-        Server.active_threads.remove(this);
-        for (ClientThread thread : Server.active_threads.keySet()){
-            if (thread.username.equals(this.username)){
-                // inform the logged in user of the attempt to login elsewhere
-                thread.output_stream.println("\n*** Another user was prevented from logging into your account. ***\n");
-            }
-            else {
-                thread.output_stream.println("\n*** " + username + " has left the server. ***\n");
-            }
-        }
-        try{
-           output_stream.close();
-           input_stream.close();
-           client_socket.close();
-       } catch (IOException e) {
-           System.err.println("Error during ClientThread cleanup:  " + e.getMessage());
-       }
-   }
     
     private void listen(){
         while (true){
@@ -193,19 +181,32 @@ class ClientThread extends Thread {
             }
             // anything else
             else {
-                output_stream.println("Sorry, I couldn't understand that command. Type \"/help\" for a list of commands.\n");
+                output_stream.println("\n*** Sorry, I couldn't understand that command. Type \"/help\" for a list of commands. ***\n");
             }
         }
     }
-    
 
-    public void run() {
-        openStreams();
-        username = getUsername();
-        if (login(username, 0,3)){
-            welcome();
-            listen();
+    /*
+     * Remove the thread from the Hashtable of currently running threads, inform others of this user's departure, 
+     * and close this thread and its streams.
+     */
+    private void cleanup(){
+        Server.active_threads.remove(this);
+        for (ClientThread thread : Server.active_threads.keySet()){
+            if (thread.username.equals(this.username)){
+                // inform the logged in user of the attempt to login elsewhere
+                thread.output_stream.println("\n*** Another user was prevented from logging into your account. ***\n");
+            }
+            else {
+                thread.output_stream.println("\n*** " + username + " has left the server. ***\n");
+            }
         }
-        cleanup();
-    }
+        try{
+           output_stream.close();
+           input_stream.close();
+           client_socket.close();
+       } catch (IOException e) {
+           System.err.println("Error during ClientThread cleanup:  " + e.getMessage());
+       }
+   }
 }

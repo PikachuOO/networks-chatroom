@@ -1,13 +1,15 @@
 /*
  * File: Server.java
  * ------------
- * Name:    Nathan Hayes-Roth
- * UNI:    nbh2113
- * Class:    Computer Networks
+ * Name:       Nathan Hayes-Roth
+ * UNI:        nbh2113
+ * Class:      Computer Networks
  * Assignment: Programming Assignment #1
  * ------------
- * Description:
- * 
+ * Description: the Server class manages all connections to clients. After creating a ServerSocket to
+ * listen for new connections, the Server creates a new ClientThread for each new Client connection. 
+ * The Server manages active connections, login credentials, login times, and blocked addresses in
+ * thread-safe Hashtables to prevent synchronization errors.
  */
 
 import java.io.*;
@@ -25,26 +27,11 @@ public class Server {
     public static Hashtable<String, Long>            login_times = new Hashtable<String, Long>();
     public static Hashtable<InetAddress, Long> blocked_addresses = new Hashtable<InetAddress, Long>();
     
-    /*
-     * Check command line arguments for correct length. If necessary,
-     * instruct the user how to correctly execute the program. Default values
-     * provided.
-     */
-    private static void setupServer(String[] args, int port_number){
-        // check command line arguments for correct length and select port
-        if (args.length != 1){
-            System.out.println("\nUsage: java Server <port_number>");
-            System.out.println("Defaulted to: java Server 4119");
-        } else {
-            port_number = Integer.parseInt(args[0]);
-        }
-        // open a server socket to listen for connections on
-        try {
-            server_socket = new ServerSocket(port_number);
-        } catch (Exception e) {
-            System.err.println("Error creating server socket: " + e.getMessage());
-        }
-        
+    /* Main method */
+    public static void main(String args[]) {
+        loadCredentials();
+        setupServer(args, 4119);
+        listen();
     }
     
     /* 
@@ -65,9 +52,30 @@ public class Server {
         }
         return credentials;
     }
+    
+    /*
+     * Check command line arguments for correct length. If necessary,
+     * instruct the user how to correctly execute the program. Default values
+     * provided.
+     */
+    private static void setupServer(String[] args, int port_number){
+        // check command line arguments for correct length and select port
+        if (args.length != 1){
+            System.out.println("\nUsage: java Server <port_number>");
+            System.out.println("Defaulted to: java Server 4119");
+        } else {
+            port_number = Integer.parseInt(args[0]);
+        }
+        // open a server socket to listen for connections on
+        try {
+            server_socket = new ServerSocket(port_number);
+        } catch (Exception e) {
+            System.err.println("Error creating server socket: " + e.getMessage());
+        }
+    }
 
     /*
-     * Listen for new client connections and treat them accordingly.
+     * Listen for new client connections and delegate new ClientThreads accordingly.
      */
     private static void listen() {
         // loop indefinitely
@@ -76,7 +84,7 @@ public class Server {
                 // listen for a connection and accept it
                 client_socket = server_socket.accept();
                 // check if the address is banned
-                if (!vetClient(client_socket, 10)){
+                if (!vetClient(client_socket, 60)){
                     // let the bad man know what he did
                     PrintStream os = new PrintStream(client_socket.getOutputStream());
                     os.println("\nYou have been temporarily banned from the server. Please try again later.\n");
@@ -86,7 +94,6 @@ public class Server {
                     // start a new client thread and start running it
                     ClientThread thread = new ClientThread(client_socket);
                     thread.start();
-                    
                 }
             } catch (Exception e) {
                 System.err.println("Error creating a ClientThread: " + e.getMessage());
@@ -113,12 +120,6 @@ public class Server {
         } else return true;
     }
 
-    public static void main(String args[]) {
-        loadCredentials();
-        setupServer(args, 4119);
-        listen();
-    }
-
     /*
      * Allows ClientThreads to validate their usernames against the accepted credentials.
      */
@@ -132,5 +133,4 @@ public class Server {
     public static boolean login(String name, String pwd) {
         return pwd.equals(credentials.get(name));
     }
-
 }
