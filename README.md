@@ -32,7 +32,7 @@ This application implements a simple client-server program similar to a chatroom
 
     `~/.../nbh2113$ java Server`
     	
-    	or
+    or
     
     `~/.../nbh2113$ java Server 4119`
 
@@ -40,7 +40,7 @@ This application implements a simple client-server program similar to a chatroom
 
 	`~/.../nbh2113$ java Client`
 	
-		or
+	or
 	
 	`~/.../nbh2113$ java Client localhost 4119`
 
