@@ -13,8 +13,6 @@
 import java.io.*;
 import java.net.*;
 import java.util.Hashtable;
-import java.util.Vector;
-import java.util.HashSet;
 
 
 public class Server {
@@ -22,11 +20,9 @@ public class Server {
     /* Class Variables */
     private static ServerSocket                     server_socket = null;
     private static Socket                           client_socket = null;
-    private static final int                      maxClientsCount = 10;
-    private static final ClientThread[]                   threads = new ClientThread[maxClientsCount];
-    public static Vector<ClientThread>       synchronized_threads = new Vector<ClientThread>();             // Synchronized storage prevents errors such as null pointers
+    public static Hashtable<ClientThread, String>       synchronized_threads = new Hashtable<ClientThread, String>();             // Synchronized storage prevents errors such as null pointers
     private static Hashtable<String, String>          credentials = new Hashtable<String,String>();
-    private static Hashtable<InetAddress, Long> blocked_addresses = new Hashtable<InetAddress, Long>();     // Synchronized storage prevents errors such as null pointers
+    public static Hashtable<InetAddress, Long> blocked_addresses = new Hashtable<InetAddress, Long>();     // Synchronized storage prevents errors such as null pointers
     
     /*
      * Check command line arguments for correct length. If necessary,
@@ -36,7 +32,7 @@ public class Server {
     private static void setupServer(String[] args, int port_number){
         // check command line arguments for correct length and select port
         if (args.length != 1){
-            System.out.println("\n       Usage: java Server <port_number>");
+            System.out.println("\nUsage: java Server <port_number>");
             System.out.println("Defaulted to: java Server 4119\n");
         } else {
             port_number = Integer.parseInt(args[0]);
@@ -86,27 +82,10 @@ public class Server {
                     os.close();
                     client_socket.close();
                 } else {
-                    //synchronized_threads.add(new ClientThread(client_socket, threads));
-                    
-                    
-                    blocked_addresses.put(client_socket.getInetAddress(), System.nanoTime());
-                    
-                    int i = 0;
-                    for (i = 0; i < maxClientsCount; i++) {
-                        if (threads[i] == null) {
-                            (threads[i] = new ClientThread(client_socket, threads))
-                                    .start();
-                            break;
-                        }
-                    }
-                    if (i == maxClientsCount) {
-                        PrintStream os = new PrintStream(
-                                client_socket.getOutputStream());
-                        os.println("Server too busy. Try later.");
-                        os.close();
-                        client_socket.close();
-                    }
-                    
+                    // add the thread to the table
+                    ClientThread thread = new ClientThread(client_socket);
+                    synchronized_threads.put(thread, "unknown");
+                    thread.start();
                     
                 }
             } catch (Exception e) {
@@ -115,7 +94,6 @@ public class Server {
                 
                 /*
                 
-                blocked_addresses.put(client_socket.getInetAddress(), System.nanoTime());
                 
                 int i = 0;
                 for (i = 0; i < maxClientsCount; i++) {
@@ -166,6 +144,20 @@ public class Server {
         loadCredentials();
         setupServer(args, 4119);
         listen();
+    }
+
+    /*
+     * Allows ClientThreads to validate their usernames against the accepted credentials.
+     */
+    public static boolean validUsername(String username) {
+        return credentials.containsKey(username);
+    }
+    
+    /*
+     * Returns true if the name and pwd match, false otherwise.
+     */
+    public static boolean login(String name, String pwd) {
+        return pwd.equals(credentials.get(name));
     }
 
 }

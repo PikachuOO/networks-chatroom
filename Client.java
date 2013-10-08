@@ -32,7 +32,7 @@ public class Client implements Runnable {
     private static void setupConnection(String[] args, String server_address, int port_number){
         // check command line arguments for correct length and select address/port
         if (args.length != 2){
-            System.out.println("\nUsage:        java Client <server_address> <port_number>");
+            System.out.println("\nUsage: java Client <server_address> <port_number>");
             System.out.println("Defaulted to: java Client localhost 4119\n");
         } else {
             server_address = args[0];
