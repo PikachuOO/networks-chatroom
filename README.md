@@ -5,6 +5,11 @@ CSEE 4119 - Computer Networks
 Programming Assignment 1 - A simple client-server program
 
 
+### Program Description
+
+This application implements a simple client-server program similar to a chatroom. Users can log themselves into the server using the terminal and, once logged in, can communicate with the server and other logged in users by using a set of installed commands. 
+
+
 ### Development Information
 
 - Programming Language: Java 
@@ -15,25 +20,41 @@ Programming Assignment 1 - A simple client-server program
 
 ### Instructions to Compile and Run
 
-1. TODO: complete
+1. Enter the project director
+	~/$ cd ~/.../nbh2113
 
+2. Compile all .java files.
+    ~/.../nbh2113$ javac *.java
 
-### Program Description
+3. In one terminal, start the server.
+    ~/.../nbh2113$ java Server
+    	or
+    ~/.../nbh2113$ java Server 4119
 
-TODO: complete
+3. In another terminal, start the Client.
+	~/.../nbh2113$ java Client
+		or
+	~/.../nbh2113$ java Client localhost 4119
 
 
 ### Files
 
-./Makefile
-./Server.java
-./ClientThread.java
+./credentials.txt
+./README.txt
 ./Client.java
+./ClientThread.java
+./Server.java
 
 
 ### Extensions
 
-TODO: complete
+- threadsafe
+- credentials stored in private hashtables to prevent unauthorized access
+- prevent multiple clients from logging in with the same credentials
+- /help and /quit commands
+- inform users when a new user join/leaves the server
+- wholasthr includes time since last login
+- broadcast messages include sender name
 
 
 ### Assignment Instructions
