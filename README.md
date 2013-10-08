@@ -1,8 +1,8 @@
-# Computer Networks - Client/Server Application
+# Networks - Chatroom
 
-Nathan Hayes-Roth
-CSEE 4119 - Computer Networks
-Programming Assignment 1 - A simple client-server program
+- Nathan Hayes-Roth
+- CSEE 4119 - Computer Networks
+- Programming Assignment 1 - A simple client-server program
 
 
 ### Program Description
@@ -21,29 +21,37 @@ This application implements a simple client-server program similar to a chatroom
 ### Instructions to Compile and Run
 
 1. Enter the project director
-	~/$ cd ~/.../nbh2113
+	
+	`~/$ cd ~/.../nbh2113`
 
 2. Compile all .java files.
-    ~/.../nbh2113$ javac *.java
+
+    `~/.../nbh2113$ javac *.java`
 
 3. In one terminal, start the server.
-    ~/.../nbh2113$ java Server
+
+    `~/.../nbh2113$ java Server`
+    	
     	or
-    ~/.../nbh2113$ java Server 4119
+    
+    `~/.../nbh2113$ java Server 4119`
 
 3. In another terminal, start the Client.
-	~/.../nbh2113$ java Client
+
+	`~/.../nbh2113$ java Client`
+	
 		or
-	~/.../nbh2113$ java Client localhost 4119
+	
+	`~/.../nbh2113$ java Client localhost 4119`
 
 
 ### Files
 
-./credentials.txt
-./README.txt
-./Client.java
-./ClientThread.java
-./Server.java
+- ./credentials.txt
+- ./README.md
+- ./Client.java
+- ./ClientThread.java
+- ./Server.java
 
 
 ### Extensions
@@ -89,19 +97,23 @@ We will observe the functionality and correctness of your code. But also we will
 Here is a sample run showing how we will be testing your code: 
 
 at terminal 1: 
-`make` 
-`java server 4119`				// 4119 here is just an example. We may test on other unoccupied ports 
+```
+make
+java server 4119				// 4119 here is just an example. We may test on other unoccupied ports
+```
 
 at terminal 2: 
-`java client 10.11.12.13 4119`	// 4119 is the port that server listens on, and 10.11.12.13
+```
+java client 10.11.12.13 4119	// 4119 is the port that server listens on, and 10.11.12.13
 								// is the IP address of the server program 
-`Username: network`				// after connecting to server, your program should prompt "Username: " and 
+Username: network				// after connecting to server, your program should prompt "Username: " and 
 								// wait for user to put in his/her name. Here our user is "network" 
-`Password: seemsez`				// again your program should prompt "Password: " and wait for user to put in 
+Password: seemsez				// again your program should prompt "Password: " and wait for user to put in 
 								// the password. Since this is a introductory assignment, the password 
 								// displayed as plain text is acceptable 
-`Welcome to simple server!`		// welcome message from the server acknowledging that the user has logged in 
-`Command:`						// from now on your server should respond to user's command as defined in appendix 
+Welcome to simple server		// welcome message from the server acknowledging that the user has logged in 
+Command:						// from now on your server should respond to user's command as defined in appendix 
+```
 
 5. Appendix 
 b) Username-password list: 
